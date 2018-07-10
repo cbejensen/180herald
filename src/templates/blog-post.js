@@ -1,21 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import BlogPostComments from '../components/BlogPostComments'
+import Link from 'gatsby-link'
+import { DiscussionEmbed, CommentCount } from 'disqus-react';
 
 class BlogPost extends React.Component {
   render() {
     const { id, title, slug, content } = this.props.data.contentfulBlog
+    const disqusShortname = '180herald'
+    const disqusConfig = {
+      title,
+      url: `https://180herald.netlify.com/${slug}`,
+      identifier: id,
+    }
     return (
       <div>
         <article>
-          <h1>{title}</h1>
+          <h1 style={{ marginBottom: 0 }}>{title}</h1>
+          {/* comment count doesn't seem to work in dev */}
+          <Link to="#disqus_thread">
+            <CommentCount shortname={disqusShortname} config={disqusConfig} />
+          </Link>
           <div
+            style={{ marginTop: '30px' }}
             dangerouslySetInnerHTML={{
               __html: content.childMarkdownRemark.html,
             }}
           />
         </article>
-        <BlogPostComments id={id} title={title} slug={slug} />
+        <DiscussionEmbed
+          shortname={disqusShortname}
+          config={disqusConfig}
+        />
       </div>
     )
   }
