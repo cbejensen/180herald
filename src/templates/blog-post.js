@@ -1,16 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import BlogPostComments from '../components/BlogPostComments'
 
 class BlogPost extends React.Component {
   render() {
-    console.log(this.props.data)
-    const { title, content } = this.props.data.contentfulBlog
+    const { id, title, slug, content } = this.props.data.contentfulBlog
     return (
       <div>
-        <h1>{title}</h1>
-        <div
-          dangerouslySetInnerHTML={{ __html: content.childMarkdownRemark.html }}
-        />
+        <article>
+          <h1>{title}</h1>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: content.childMarkdownRemark.html,
+            }}
+          />
+        </article>
+        <BlogPostComments id={id} title={title} slug={slug} />
       </div>
     )
   }
@@ -25,6 +30,7 @@ export default BlogPost
 export const pageQuery = graphql`
   query blogPostQuery($slug: String!) {
     contentfulBlog(slug: { eq: $slug }) {
+      id
       title
       slug
       content {
